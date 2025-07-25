@@ -1,0 +1,16 @@
+from typing import Sequence
+from sqlalchemy.sql.elements import ColumnElement
+from db import db
+from models.organizations import Organizations
+
+class OrganizationsService:
+    @staticmethod
+    def find_many(
+        filters: Sequence[ColumnElement[bool]] = (),
+        page: int = 1,
+        limit: int = 10
+    ):
+        query = db.query(Organizations)
+        if filters:
+            query = query.filter(*filters)
+        return query.limit(limit).offset((page - 1) * limit).all()

@@ -1,0 +1,9 @@
+streamlit
+pandas
+requests
+pydantic
+python-dotenv
+sqlacodegen
+sqlalchemy
+streamlit_shadcn_ui
+psycopg2-binary

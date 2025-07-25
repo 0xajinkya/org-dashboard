@@ -1,0 +1,4 @@
+[server]
+fileWatcherType = "poll"
+folderWatchBlacklist = ['__pycache__']
+runOnSave = true
