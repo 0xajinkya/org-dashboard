@@ -9,22 +9,6 @@ class Base(DeclarativeBase):
     pass
 
 
-class OrganizationInformation(Base):
-    __tablename__ = 'organization_information'
-    __table_args__ = (
-        PrimaryKeyConstraint('id', name='organization_information_pkey'),
-        UniqueConstraint('name', name='organization_information_name_key'),
-        Index('idx_name_trgm', 'name'),
-        {'schema': 'organization'}
-    )
-
-    id: Mapped[int] = mapped_column(Integer, Identity(always=True, start=1, increment=1, minvalue=1, maxvalue=2147483647, cycle=False, cache=1), primary_key=True)
-    name: Mapped[str] = mapped_column(String(255))
-    preprocessed_name: Mapped[str] = mapped_column(String(255))
-    organization_id: Mapped[Optional[int]] = mapped_column(Integer)
-    is_hospital_or_university: Mapped[Optional[bool]] = mapped_column(Boolean)
-
-
 class Organizations(Base):
     __tablename__ = 'organizations'
     __table_args__ = (
@@ -40,6 +24,26 @@ class Organizations(Base):
 
     organization_knowledge: Mapped[List['OrganizationKnowledge']] = relationship('OrganizationKnowledge', back_populates='organization')
 
+class OrganizationInformation(Base):
+    __tablename__ = 'organization_information'
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='organization_information_pkey'),
+        UniqueConstraint('name', name='organization_information_name_key'),
+        Index('idx_name_trgm', 'name'),
+        {'schema': 'organization'}
+    )
+
+    id: Mapped[int] = mapped_column(Integer, Identity(...), primary_key=True)
+    name: Mapped[str] = mapped_column(String(255))
+    preprocessed_name: Mapped[str] = mapped_column(String(255))
+    organization_id: Mapped[Optional[int]] = mapped_column(Integer)
+    is_hospital_or_university: Mapped[Optional[bool]] = mapped_column(Boolean)
+
+    organization: Mapped[Optional[Organizations]] = relationship(
+        "Organizations",
+        primaryjoin="foreign(OrganizationInformation.organization_id) == Organizations.id",
+        lazy="selectin"
+    )
 
 class OrganizationKnowledge(Base):
     __tablename__ = 'organization_knowledge'

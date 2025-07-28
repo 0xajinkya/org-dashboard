@@ -14,3 +14,13 @@ class OrganizationsService:
         if filters:
             query = query.filter(*filters)
         return query.limit(limit).offset((page - 1) * limit).all()
+
+    @staticmethod
+    def update_one(id: str, **kwargs):
+        try:
+            result = db.query(Organizations).filter(Organizations.id == id).update(kwargs)
+            db.commit()
+            return result
+        except Exception as e:
+            db.rollback()
+            raise e
