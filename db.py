@@ -1,19 +1,21 @@
+"""This module provides a connection to the database."""
+
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine, text
+
 import streamlit as st
 from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+engine = create_engine(DATABASE_URL, echo=False)
+SessionLocal = sessionmaker(bind=engine)
+
 
 @st.cache_resource(show_spinner="Connecting to database...")
-def get_session():
-    engine = create_engine(DATABASE_URL, echo=False)
-    SessionLocal = sessionmaker(bind=engine)
-
+def connect_to_db():
     try:
         session = SessionLocal()
         session.execute(text("SELECT 1"))
@@ -23,4 +25,5 @@ def get_session():
         raise
     return session
 
-db = get_session()
+
+db = connect_to_db()

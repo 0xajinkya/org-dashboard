@@ -1,6 +1,9 @@
-from db import get_session
-get_session()
+"""Imports modules."""
 
 from components.organization_listings import organization_listings
+from db import connect_to_db
 
-organizations = organization_listings()
+connect_to_db()
+
+
+organization_listings()

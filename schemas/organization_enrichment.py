@@ -1,5 +1,6 @@
-from pydantic import BaseModel, AnyHttpUrl
-from typing import List, Optional
+from typing import List, Literal, Optional
+
+from pydantic import AnyHttpUrl, BaseModel
 
 
 class Usage(BaseModel):
@@ -8,11 +9,19 @@ class Usage(BaseModel):
     total_tokens: Optional[int]
 
 
-class OrganizationEnrichment(BaseModel):
-    official_company_name: Optional[str]
+class ExtraInfo(BaseModel):
+    name: Optional[str]
     domain_url: Optional[AnyHttpUrl]
-    citations: List[AnyHttpUrl]
-    usage: Optional[Usage]
+
 
 class OrganizationEnrichmentJsonSchema(BaseModel):
-    official_company_name: Optional[str]
+    official_name: Optional[str]
+    status: Literal["standalone", "acquired", "subsidiary"]
+    domain_url: Optional[AnyHttpUrl]
+    extra_info: Optional[ExtraInfo]
+
+
+class OrganizationEnrichment(BaseModel):
+    enrichment: OrganizationEnrichmentJsonSchema
+    citations: List[AnyHttpUrl]
+    usage: Optional[Usage]
